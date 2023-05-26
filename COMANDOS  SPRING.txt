@@ -1,0 +1,107 @@
+***********requerimientos*****
+java -version =>JE java
+javac -version => compilador java
+mvn version => maven
+
+*************Documentacion para consuñtar **********
+
+spring.oi/projects/spring-data
+spring tiene variso modulos y dentro de cada modulo  las hermmanienta dependiendo del problema que se quiere resolver
+
+*********************
+
+ConfigurableApplicationContext context = SpringApplication.run(InyeccionDependenciaApplication.class, args);
+ context.getBean(Coche.class).run();
+
+**************nuevo proyecto****
+
+file=> new => 
+	other => en el buscardor ponermos  
+	spring =>spring starter project 
+	next=>ponemos  nombre proyecto,gruop  que es la compania ,Artifact se queda igual que el nombre y le cambiamos el nombre al package solo la ultima palabra despues del punto
+	que es ahi de donde se rea la demas clase java
+	next=> seleccionamos modulos o dependencias de spring con la que se quiere trabajar
+		pring boot devtools = es para herramienta de desarrollo para ala palicacion 
+		spring web = servicio rest
+	next => dejamos asi la configuracion
+	finish.
+
+************************INYECCIONDE DEPENDENCIAS *******************
+
+inyeccion por atributo => Es cuando se le pone @value("FORD")  arriba de la valiable que se declara 
+
+inyeccion por contructor => Es cuando se pone el @value("FORD") en el contructos. 
+	@Autowared
+	public Coche(@value("FORD") String marca, @value("FORD") Integer modelo, Motor motor) {
+			this.marca = marca;
+		this.modelo = modelo
+		this.motor = motor;
+	}
+
+NOTA ==========>>>Se quitan los contructores vacios para que no manden null
+
+inyeccion por setting =>  se ponen @value("FORD") en los setters
+
+NOTA=======>> En este caso se deja el contructor vacio y se quita el contructor con parametros
+
+
+***************ESTEREOTIPOS  basicos de spring core ***************
+
+@component=>
+@service=> usan para ejecutar logica de negocio
+@Controller=Z usan para exposicion de datos
+@repository=> usan para acceso a datos
+
+NOTA===>>>LOS ESTEREOTIPOS NO SE PONEN A LAS CLASES GENERICAS ANIMAL,VOLADOR 
+          SE PONE A LASIMPLEMENTACIONES CONCRETAS PERRO, PAJARO,AVION
+
+
+************@QUALIFIERS**********************************
+
+Se pone enfrente del estereotipo otro nombre ==>> @Component("perrito")
+Se pone el nombre de la clase en minuscula ,perro ==>> public class Perro
+
+@Component
+@Primary
+public class Pajaro extends Animal implements Volador{
+
+************@primary******************************
+Se usa cuando queremos poenr un qualifier con el nombre de la clase en minuscula pero adicional se le agrega primary
+
+
+*************perfiles  *********************************
+
+         ---SE CONFIGURA EL PROPERTIES
+DEV=>spring.profiles.active=dev
+QA=>spring.profiles.active=qa
+PROD=>spring.profiles.active=prod
+
+----SE CONFIGURA EL PROFILE QUE ESTA ABAJO DEL ESTEREOTIPO 
+@Service
+@Profile({"dev","default"})
+
+----CONFIGURACION EN RUN CONFIGURACIONES,ARGUMENTS
+-Dspring.profiles.active=dev
+
+
+***********************SCOPES**********************
+ESCOPE=> Se traduce como hambito y es el tiempo de vida que va a tener un Bean
+
+singleton
+prototype
+request
+sesion
+
+@Service
+// ENVIA OBJETOS DIFERENTES O NUEVO  AL EJECUTAR BEAN "crea una nueva instancia" @Scope("prototype")
+// SIEMPRE ENVIA MISMO OBJETO ES EL SCOPE POR DEFECTO @Scope("singleton")
+public class EjemploEscopeService {
+
+**********************************BEAN DECLARACION DE FORMA EXPLICITA*****************
+//DECLARACION DE BEANS DE FORMA EXPLICITA, NO EXISTE LA CLASE SE INYECTA CON UN METODO GET Y ESTEREOTIPO @BEAN COMO SE MUESTRA ABAJO
+	@Bean
+	public String getAplicacionName() {
+		return "DEVS4J RULES";
+
+String nombreAplicacion = context.getBean(String.class);
+log.info("nombre de la aplicacion {}",nombreAplicacion);
